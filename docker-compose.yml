@@ -10,27 +10,57 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres123
     volumes:
-      - ./database:/docker-entrypoint-initdb.d
+      - .express-ts/database:/docker-entrypoint-initdb.d
       - express-ts_volume:/var/lib/postgresql/data
     healthcheck:
       test: [ 'CMD-SHELL', 'pg_isready -U postgres' ]
       interval: 5s
       timeout: 5s
       retries: 3
+    networks:
+      ts_net:
+        ipv4_address: 172.16.238.02
+    extra_hosts:
+      - "appi.express-ts.com:172.16.238.03"
   dev_app:
     build:
       context: .
-      dockerfile: ./Dockerfile-dev
+      dockerfile: ./express-ts/Dockerfile-dev
     ports:
-      - 3000:3000
+      - 4000:80
       - 9229:9229
     working_dir: /app
     entrypoint: [ '/bin/bash', '-c' ]
     command: [ 'npm start' ]
     volumes:
-      - ./:/app
+      - ./express-ts:/app
     depends_on:
       - dev_db
-
+    networks:
+      ts_net:
+        ipv4_address: 172.16.238.03
+    extra_hosts:
+      - "ui.express-ts.com:172.16.238.04"
+  front_end:
+    image: nginx:stable-alpine
+    ports:
+      - 80:80
+    volumes:
+      - ./react-ts/build:/app
+      - ./react-ts/nginx.conf:/etc/nginx/nginx.conf
+    networks:
+      ts_net:
+        ipv4_address: 172.16.238.04
+    extra_hosts:
+      - "appi.express-ts.com:172.16.238.03"
 volumes:
   express-ts_volume:
+
+networks:
+  ts_net:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.16.238.0/24
+          gateway: 172.16.238.1

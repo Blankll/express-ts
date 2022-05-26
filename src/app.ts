@@ -1,7 +1,7 @@
-import * as express from "express";
-import {Request, Response} from "express";
+import express, {Request, Response} from "express";
 import {createConnection} from "typeorm";
 import {User} from "./entity/user";
+import cors from "cors";
 
 // create typeorm connection
 createConnection().then(connection => {
@@ -10,6 +10,7 @@ createConnection().then(connection => {
   // create and setup express app
   const app = express();
   app.use(express.json());
+  app.use(cors({origin: true, credentials: true}))
 
   // register routes
 
@@ -40,36 +41,59 @@ createConnection().then(connection => {
     const results = await userRepository.delete(req.params.id);
     return res.send(results);
   });
-  console.log('service start at 3000')
-  // start express server
-  app.listen(3000);
-});
+  app.get('/cookie/tst', (eq: Request, res: Response) => {
+    res.json({message: `success ${eq.method}`});
+  })
+  app.post('/cookie/tst', (eq: Request, res: Response) => {
+    res.json({message: `success ${eq.method}`});
+  })
+  app.put('/cookie/tst', (eq: Request, res: Response) => {
+    res.json({message: `success ${eq.method}`});
+  })
+  app.delete('/cookie/tst', (eq: Request, res: Response) => {
+    res.json({message: `success ${eq.method}`});
+  })
+  app.trace('/cookie/tst', (eq: Request, res: Response) => {
+    res.json({message: `success ${eq.method}`});
+  })
+  app.post('/setcookie', (eq: Request, res: Response) => {
+    res.cookie('strictCookie', 'strictCookie', {
+      httpOnly: true,
+      secure: true,
+      maxAge: 3600*100,
+      sameSite: 'strict',
+      domain: '.express-ts.com'
+    });
+    res.cookie('laxSiteCookie', 'laxSiteCookie', {
+      httpOnly: true,
+      secure: true,
+      maxAge: 3600*100,
+      sameSite: 'lax',
+      domain: '.express-ts.com'
+    });
+    res.cookie('laxUnsecureSiteCookie', 'sameSiteval', {
+      httpOnly: true,
+      secure: true,
+      maxAge: 3600*100,
+      sameSite: 'lax',
+      domain: '.express-ts.com'
+    });
+    res.cookie('noneSecureSiteCookie', 'noneSiteCookie', {
+      httpOnly: true,
+      secure: true,
+      maxAge: 3600*100,
+      sameSite: 'none',
+      domain: '.express-ts.com'
+    });
+    res.cookie('noneSiteCookie', 'noneSiteCookie', {
+      secure: true,
+      maxAge: 3600*100,
+      sameSite: 'none',
+      domain: '.express-ts.com'
+    });
+  });
 
-// // create and setup express app
-// const app = express();
-// app.use(express.json());
-//
-// // register routes
-//
-// app.get("/users", function(req: Request, res: Response) {
-//   // here we will have logic to return all users
-// });
-//
-// app.get("/users/:id", function(req: Request, res: Response) {
-//   // here we will have logic to return user by id
-// });
-//
-// app.post("/users", function(req: Request, res: Response) {
-//   // here we will have logic to save a user
-// });
-//
-// app.put("/users/:id", function(req: Request, res: Response) {
-//   // here we will have logic to update a user by a given user id
-// });
-//
-// app.delete("/users/:id", function(req: Request, res: Response) {
-//   // here we will have logic to delete a user by a given user id
-// });
-//
-// // start express server
-// app.listen(3000);
+  console.log('service start at 80')
+  // start express server
+  app.listen(80);
+});
