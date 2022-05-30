@@ -19,9 +19,9 @@ services:
       retries: 3
     networks:
       ts_net:
-        ipv4_address: 172.16.238.02
+        ipv4_address: 172.16.238.2
     extra_hosts:
-      - "appi.express-ts.com:172.16.238.03"
+      - "api.express-ts.com:172.16.238.3"
   dev_app:
     build:
       context: .
@@ -38,9 +38,9 @@ services:
       - dev_db
     networks:
       ts_net:
-        ipv4_address: 172.16.238.03
+        ipv4_address: 172.16.238.3
     extra_hosts:
-      - "ui.express-ts.com:172.16.238.04"
+      - "ui.express-ts.com:172.16.238.4"
   front_end:
     image: nginx:stable-alpine
     ports:
@@ -50,9 +50,9 @@ services:
       - ./react-ts/nginx.conf:/etc/nginx/nginx.conf
     networks:
       ts_net:
-        ipv4_address: 172.16.238.04
+        ipv4_address: 172.16.238.4
     extra_hosts:
-      - "appi.express-ts.com:172.16.238.03"
+      - "api.express-ts.com:172.16.238.3"
 volumes:
   express-ts_volume:
 

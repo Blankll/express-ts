@@ -14,49 +14,49 @@ createConnection().then(connection => {
 
   // register routes
 
-  app.get("/users", async function(req: Request, res: Response) {
+  app.get("/api/users", async function(req: Request, res: Response) {
     const users = await userRepository.find();
     res.json(users);
   });
 
-  app.get("/users/:id", async function(req: Request, res: Response) {
+  app.get("/api/users/:id", async function(req: Request, res: Response) {
     const results = await userRepository.findOne(req.params.id);
     return res.send(results);
   });
 
-  app.post("/users", async function(req: Request, res: Response) {
+  app.post("/api/users", async function(req: Request, res: Response) {
     const user = await userRepository.create(req.body);
     const results = await userRepository.save(user);
     return res.send(results);
   });
 
-  app.put("/users/:id", async function(req: Request, res: Response) {
+  app.put("/api/users/:id", async function(req: Request, res: Response) {
     const user = await userRepository.findOne(req.params.id);
     userRepository.merge(user, req.body);
     const results = await userRepository.save(user);
     return res.send(results);
   });
 
-  app.delete("/users/:id", async function(req: Request, res: Response) {
+  app.delete("/api/users/:id", async function(req: Request, res: Response) {
     const results = await userRepository.delete(req.params.id);
     return res.send(results);
   });
-  app.get('/cookie/tst', (eq: Request, res: Response) => {
+  app.get('/api/cookie/tst', (eq: Request, res: Response) => {
     res.json({message: `success ${eq.method}`});
   })
-  app.post('/cookie/tst', (eq: Request, res: Response) => {
+  app.post('/api/cookie/tst', (eq: Request, res: Response) => {
     res.json({message: `success ${eq.method}`});
   })
-  app.put('/cookie/tst', (eq: Request, res: Response) => {
+  app.put('/api/cookie/tst', (eq: Request, res: Response) => {
     res.json({message: `success ${eq.method}`});
   })
-  app.delete('/cookie/tst', (eq: Request, res: Response) => {
+  app.delete('/api/cookie/tst', (eq: Request, res: Response) => {
     res.json({message: `success ${eq.method}`});
   })
-  app.trace('/cookie/tst', (eq: Request, res: Response) => {
+  app.trace('/api/cookie/tst', (eq: Request, res: Response) => {
     res.json({message: `success ${eq.method}`});
   })
-  app.post('/setcookie', (eq: Request, res: Response) => {
+  app.post('/api/setcookie', (eq: Request, res: Response) => {
     res.cookie('strictCookie', 'strictCookie', {
       httpOnly: true,
       secure: true,
@@ -91,6 +91,7 @@ createConnection().then(connection => {
       sameSite: 'none',
       domain: '.express-ts.com'
     });
+    res.send()
   });
 
   console.log('service start at 80')
