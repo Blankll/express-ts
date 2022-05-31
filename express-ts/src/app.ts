@@ -59,37 +59,38 @@ createConnection().then(connection => {
   app.post('/api/setcookie', (eq: Request, res: Response) => {
     res.cookie('strictCookie', 'strictCookie', {
       httpOnly: true,
-      secure: true,
       maxAge: 3600*100,
       sameSite: 'strict',
       domain: '.express-ts.com'
     });
     res.cookie('laxSiteCookie', 'laxSiteCookie', {
       httpOnly: true,
-      secure: true,
-      maxAge: 3600*100,
-      sameSite: 'lax',
-      domain: '.express-ts.com'
-    });
-    res.cookie('laxUnsecureSiteCookie', 'sameSiteval', {
-      httpOnly: true,
-      secure: true,
       maxAge: 3600*100,
       sameSite: 'lax',
       domain: '.express-ts.com'
     });
     res.cookie('noneSecureSiteCookie', 'noneSiteCookie', {
       httpOnly: true,
-      secure: true,
       maxAge: 3600*100,
       sameSite: 'none',
       domain: '.express-ts.com'
     });
     res.cookie('noneSiteCookie', 'noneSiteCookie', {
-      secure: true,
       maxAge: 3600*100,
       sameSite: 'none',
       domain: '.express-ts.com'
+    });
+    res.cookie('strictOtherSiteCookie', 'strictOtherSiteCookie', {
+      httpOnly: true,
+      maxAge: 3600*100,
+      sameSite: 'strict',
+      domain: '.google.com'
+    });
+    res.cookie('laxOtherSiteCookie', 'laxOtherSiteCookie', {
+      httpOnly: true,
+      maxAge: 3600*100,
+      sameSite: 'lax',
+      domain: '.google.com'
     });
     res.send()
   });
