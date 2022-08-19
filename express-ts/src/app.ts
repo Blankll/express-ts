@@ -2,6 +2,7 @@ import express, {Request, Response} from "express";
 import {createConnection} from "typeorm";
 import {User} from "./entity/user";
 import cors from "cors";
+import moment from "moment";
 
 // create typeorm connection
 createConnection().then(connection => {
@@ -17,6 +18,15 @@ createConnection().then(connection => {
   app.get("/api/users", async function(req: Request, res: Response) {
     const users = await userRepository.find();
     res.json(users);
+  });
+  
+  app.get("/api/moment", async function(req: Request, res: Response) {
+    const dateTimeString = '2018-04-12T03:55:58.998Z';
+    const is2Valid = moment(dateTimeString, "YY-MM-DDTHH:mm:ss.SSSZ", true).isValid();
+    const is3Valid = moment(dateTimeString, "YYY-MM-DDTHH:mm:ss.SSSZ", true).isValid();
+    const is4Valid = moment(dateTimeString, "YYYY-MM-DDTHH:mm:ss.SSSZ", true).isValid();
+
+    res.json({is2Valid, is3Valid, is4Valid });
   });
 
   app.get("/api/users/:id", async function(req: Request, res: Response) {
